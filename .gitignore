@@ -5,3 +5,4 @@ __pycache__/
 .DS_STORE
 logs/
 dags/__pycache__/
+data/
