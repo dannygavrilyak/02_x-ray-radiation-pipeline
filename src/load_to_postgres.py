@@ -3,13 +3,47 @@ import os
 from pathlib import Path
 
 import psycopg2
+from dotenv import load_dotenv
 from psycopg2.extras import execute_values
+
+load_dotenv()
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = int(os.getenv("DB_PORT", "5435"))
-DB_NAME = os.getenv("DB_NAME", "postgres")
+DB_NAME = os.getenv("DB_NAME", "goes_xray_radiation_dwh")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("DB_PASSWORD", "postgres")
+
+CREATE_DATABASE = """
+CREATE TABLE IF NOT EXISTS raw_xray_telemetry (
+    time_tag TIMESTAMP WITH TIME ZONE,
+    satellite INTEGER,
+    flux DOUBLE PRECISION,
+    observed_flux DOUBLE PRECISION,
+    electron_correction DOUBLE PRECISION,
+    electron_contaminaton BOOLEAN,
+    energy VARCHAR(20),
+    raw_payload JSONB,
+    ingested_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (time_tag, energy)
+);
+"""
+
+INSERT_QUERY = """
+INSERT INTO raw_xray_telemetry (
+    time_tag,
+    satellite,
+    flux,
+    observed_flux,
+    electron_correction,
+    electron_contaminaton,
+    energy,
+    raw_payload
+)
+
+VALUES %s
+ON CONFLICT(time_tag, energy) DO NOTHING;
+"""
 
 
 def get_latest_raw_file(raw_dir: str = "data/raw") -> Path:
@@ -52,21 +86,6 @@ def load_raw_to_postgres():
         print("It's nothing to save.")
         return
 
-    insert_query = """
-        INSERT INTO raw_xray_telemetry (
-            time_tag,
-            satellite,
-            flux,
-            observed_flux,
-            electron_correction,
-            electron_contaminaton,
-            energy,
-            raw_payload
-        )
-        VALUES %s
-        ON CONFLICT(time_tag, energy) DO NOTHING;
-    """
-
     with (
         psycopg2.connect(
             host=DB_HOST,
@@ -77,8 +96,8 @@ def load_raw_to_postgres():
         ) as conn,
         conn.cursor() as curs,
     ):
-        execute_values(curs, insert_query, batch)
-
+        curs.execute(CREATE_DATABASE)
+        execute_values(curs, INSERT_QUERY, batch)
     print(f"Records processed: {len(batch)} ✅ ")
 
 
