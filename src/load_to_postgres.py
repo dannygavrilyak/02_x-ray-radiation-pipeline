@@ -14,7 +14,7 @@ DB_NAME = os.getenv("DB_NAME", "goes_xray_radiation_dwh")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("DB_PASSWORD", "postgres")
 
-CREATE_DATABASE = """
+CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS raw_xray_telemetry (
     time_tag TIMESTAMP WITH TIME ZONE,
     satellite INTEGER,
@@ -96,7 +96,7 @@ def load_raw_to_postgres():
         ) as conn,
         conn.cursor() as curs,
     ):
-        curs.execute(CREATE_DATABASE)
+        curs.execute(CREATE_TABLE)
         execute_values(curs, INSERT_QUERY, batch)
     print(f"Records processed: {len(batch)} ✅ ")
 

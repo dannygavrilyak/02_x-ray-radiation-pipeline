@@ -2,7 +2,10 @@
 .env
 __pycache__/
 *.pyc
-.DS_STORE
+.DS_Store
 logs/
 dags/__pycache__/
 data/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
