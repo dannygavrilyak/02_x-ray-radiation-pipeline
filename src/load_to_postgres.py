@@ -14,21 +14,6 @@ DB_NAME = os.getenv("POSTGRES_DB") or os.getenv("DB_NAME", "goes_xray_radiation_
 DB_USER = os.getenv("POSTGRES_USER") or os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("POSTGRES_PASSWORD") or os.getenv("DB_PASSWORD", "postgres")
 
-CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS raw_xray_telemetry (
-    time_tag TIMESTAMP WITH TIME ZONE,
-    satellite INTEGER,
-    flux DOUBLE PRECISION,
-    observed_flux DOUBLE PRECISION,
-    electron_correction DOUBLE PRECISION,
-    electron_contaminaton BOOLEAN,
-    energy VARCHAR(20),
-    raw_payload JSONB,
-    ingested_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (time_tag, energy)
-);
-"""
-
 INSERT_QUERY = """
 INSERT INTO raw_xray_telemetry (
     time_tag,
@@ -99,7 +84,6 @@ def load_raw_to_postgres(target_file: str | Path | None = None):
         ) as conn,
         conn.cursor() as curs,
     ):
-        curs.execute(CREATE_TABLE)
         execute_values(curs, INSERT_QUERY, batch)
     print(f"Records processed: {len(batch)} ✅ ")
 
