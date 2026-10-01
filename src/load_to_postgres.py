@@ -54,8 +54,11 @@ def get_latest_raw_file(raw_dir: str = "data/raw") -> Path:
     return max(files, key=os.path.getmtime)
 
 
-def load_raw_to_postgres():
-    target_file = get_latest_raw_file()
+def load_raw_to_postgres(target_file: str | Path | None = None):
+
+    if target_file is None:
+        target_file = get_latest_raw_file()
+
     print(f"Reading file: {target_file}")
 
     with open(target_file, "r", encoding="utf-8") as f:
