@@ -12,7 +12,6 @@ default_args = {
     "execution_timeout": timedelta(minutes=12),
 }
 
-
 @dag(
     dag_id='noaa_goes_xray_pipeline',
     default_args=default_args,

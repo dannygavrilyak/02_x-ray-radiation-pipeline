@@ -16,7 +16,7 @@ DB_USER = os.getenv("POSTGRES_USER")
 DB_PASS = os.getenv("POSTGRES_PASSWORD")
 DB_NAME = os.getenv("POSTGRES_DB")
 DB_HOST = os.getenv("DB_HOST", "postgres_dwh")
-DB_PORT = int(os.getenv("DB_PORT", 5435))
+DB_PORT = int(os.getenv("DB_PORT", "5435"))
 
 @sl.cache_data(ttl=65)
 def load_data():
@@ -40,9 +40,10 @@ try:
 
     sl.title("☀️ NOAA GOES X-Ray Flux Telemetry")
 
-    col1, col2 = sl.columns(2)
+    col1, col2, col3 = sl.columns(3)
     col1.metric("Total measures", len(df))
     col2.metric("Max flow", f"{df['flux'].max():.2e} W/m²")
+    col3.metric("Last measure (UTC)", str(df["time_tag"].max()))
 
     flib = pe.line(
         df,
@@ -56,5 +57,5 @@ try:
 
     sl.dataframe(df.tail(20), use_container_width=True)
 
-except Exception as e:
+except Exception as e: # noqa: BLE001
     sl.error(f"Error loading from DB Postgres: {e}")
