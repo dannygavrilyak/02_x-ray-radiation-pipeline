@@ -11,7 +11,7 @@ RAW_DIR = "data/raw"
 
 def fetch_xray_data() -> str:
     try:
-        response = requests.get(URL, timeout=15)
+        response = requests.get(URL, timeout=10)
         response.raise_for_status()
         data = response.json()
 
@@ -32,4 +32,4 @@ def fetch_xray_data() -> str:
         raise
 
 if __name__ == "__main__":
-    fetch_xray_data()
+    fetch_xray_data() 

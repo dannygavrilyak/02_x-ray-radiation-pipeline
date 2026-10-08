@@ -21,7 +21,7 @@ INSERT INTO raw_xray_telemetry (
     flux,
     observed_flux,
     electron_correction,
-    electron_contaminaton,
+    electron_contamination,
     energy,
     raw_payload
 )
@@ -65,7 +65,7 @@ def load_raw_to_postgres(target_file: str | Path | None = None):
                 it.get("flux"),
                 it.get("observed_flux"),
                 it.get("electron_correction"),
-                it.get("electron_contaminaton"),
+                it.get("electron_contamination"),
                 it.get("energy"),
                 json.dumps(it),
             )
