@@ -8,11 +8,11 @@ from psycopg2.extras import execute_values
 
 load_dotenv()
 
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASS = os.getenv("POSTGRES_PASSWORD")
+DB_NAME = os.getenv("POSTGRES_DB")
 DB_HOST = os.getenv("DB_HOST", "postgres_dwh")
-DB_PORT = int(os.getenv("DB_PORT", "5432"))
-DB_NAME = os.getenv("POSTGRES_DB") or os.getenv("DB_NAME", "goes_xray_radiation_dwh")
-DB_USER = os.getenv("POSTGRES_USER") or os.getenv("DB_USER", "postgres")
-DB_PASS = os.getenv("POSTGRES_PASSWORD") or os.getenv("DB_PASSWORD", "postgres")
+DB_PORT = int(os.getenv("DB_PORT", 5432))
 
 INSERT_QUERY = """
 INSERT INTO raw_xray_telemetry (
