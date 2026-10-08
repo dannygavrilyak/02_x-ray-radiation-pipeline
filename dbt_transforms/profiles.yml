@@ -1,0 +1,12 @@
+xray_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres_dwh
+      port: 5432
+      user: postgres
+      pass: postgres
+      dbname: goes_xray_radiation_dwh
+      schema: analytical
+      threads: 1

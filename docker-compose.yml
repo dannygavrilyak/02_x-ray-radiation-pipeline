@@ -7,6 +7,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER:-airflow}:${AIRFLOW_DB_PASSWORD:-airflow}@postgres_airflow:5432/${AIRFLOW_DB:-airflow}
     AIRFLOW__CORE__DEFAULT_TIMEZONE: UTC
     PYTHONPATH: /opt/airflow
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-dbt-postgres}
     DB_HOST: postgres_dwh
     DB_PORT: 5432
     POSTGRES_DB: ${POSTGRES_DB}
@@ -18,6 +19,7 @@ x-airflow-common: &airflow-common
     - ./src:/opt/airflow/src
     - ./data:/opt/airflow/data
     - ./.env:/opt/airflow/.env
+    - ./dbt_transforms:/opt/airflow/dbt_transforms
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     postgres_airflow:
