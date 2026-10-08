@@ -32,10 +32,6 @@ docker compose up -d
 
 ---
 
-## Manual Installation (Without Docker)
-
----
-
 ## Architecture & Data Flow
 
 * **Ingestion Layer (`/src` & `/dags`)**: Automated Airflow TaskFlow DAG (`noaa_goes_xray_pipeline`) pulling 6-hour rolling telemetry JSON from the NOAA Space Weather Prediction Center (SWPC) REST API. Handles schema validation and idempotent batch upserts into `public.raw_xray_telemetry` via `ON CONFLICT (time_tag, energy) DO NOTHING`.
@@ -46,10 +42,6 @@ docker compose up -d
 * **Reporting Layer (Streamlit & Plotly)**: Real-time operational dashboard (`applit.py`) querying the curated `fct_xray_telemetry` mart, plotting dual-channel irradiance on a logarithmic scale with 65-second caching.
 
 > **Note on data flow:** Data is ingested as an append-only time series. The reporting layer isolates the most recent 1,000 observations via subquery ordering (`ORDER BY time_tag DESC LIMIT 1000`) before rendering chronologically (`ASC`), preventing dashboard latency as historical volume scales.
-
-### Database Schema (ERD)
-
-![NOAA Telemetry Schema ERD](docs/images/schema_xray_erd.png)
 
 ## Tech Stack
 
