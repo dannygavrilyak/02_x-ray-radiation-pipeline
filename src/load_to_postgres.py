@@ -65,7 +65,7 @@ def load_raw_to_postgres(target_file: str | Path | None = None):
                 it.get("flux"),
                 it.get("observed_flux"),
                 it.get("electron_correction"),
-                it.get("electron_contamination"),
+                it.get("electron_contaminaton"),
                 it.get("energy"),
                 json.dumps(it),
             )

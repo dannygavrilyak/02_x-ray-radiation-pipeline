@@ -1,0 +1,28 @@
+models:
+  - name: dim_satellite
+    columns:
+      - name: satellite_sk
+        data_tests:
+          - not_null
+          - unique
+  
+  - name: fct_xray_telemetry
+    columns:
+      - name: telemetry_sk
+        data_tests:
+          - not_null
+          - unique
+
+      - name: satellite_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_satellite')
+                field: satellite_sk
+        
+      - name: energy_channel
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['0.05-0.4nm', '0.1-0.8nm']

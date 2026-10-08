@@ -9,3 +9,8 @@ data/
 *.py[cod]
 .ruff_cache/
 .pytest_cache/
+
+# dbt artifacts
+dbt_transforms/target/
+dbt_transforms/dbt_packages/
+dbt_transforms/logs/
